@@ -51,10 +51,11 @@ abstract class Web extends ZenCore\Application\Controller\Controller
                     ? $this->config['caching.twig']
                     : false;
             }
+            $this->onRespond($o_view);
             $s_out = $o_view->render($a_options);
             $this->output->write($s_out);
         }
-        $this->sendExtraHeaders();
+        $this->onClose();
         $this->output->close();
     }
 
@@ -140,11 +141,21 @@ abstract class Web extends ZenCore\Application\Controller\Controller
     }
 
     /**
-     * 输出额外的响应头信息。
+     * 响应事件。
+     *
+     * @param  ZenView\IView $view
+     * @return void
+     */
+    protected function onRespond(ZenView\IView $view)
+    {
+    }
+
+    /**
+     * 控制器输出结束事件。
      *
      * @return void
      */
-    protected function sendExtraHeaders()
+    protected function onClose()
     {
     }
 
