@@ -192,10 +192,12 @@ abstract class Dao extends ZenModel\Dao\Dao
         $a_wterms = $a_values = array();
         foreach ($this->reverseMap($conditions) as $ii => $jj) {
             list($s_term, $s_join) = $this->parseTerm($ii);
-            if ($s_clause && $s_join) {
-                throw new ExTooManyForeignTables(static::TABLE, $conditions);
+            if ($s_join) {
+                if ($s_clause) {
+                    throw new ExTooManyForeignTables(static::TABLE, $conditions);
+                }
+                $s_clause = $s_join;
             }
-            $s_clause = $s_join;
             foreach ($jj as $kk) {
                 switch ($kk[0]) {
                     case ZenModel\ISet::OP_IN:
@@ -212,10 +214,12 @@ abstract class Dao extends ZenModel\Dao\Dao
         $a_oterms = array();
         foreach ($this->reverseMap($orders) as $ii => $jj) {
             list($s_term, $s_join) = $this->parseTerm($ii);
-            if ($s_clause && $s_join) {
-                throw new ExTooManyForeignTables(static::TABLE, $orders);
+            if ($s_join) {
+                if ($s_clause) {
+                    throw new ExTooManyForeignTables(static::TABLE, $orders);
+                }
+                $s_clause = $s_join;
             }
-            $s_clause = $s_join;
             $a_oterms[] = $s_term . ($jj ? 'ASC' : 'DESC');
         }
         if (!empty($a_wterms)) {
