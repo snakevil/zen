@@ -55,6 +55,7 @@ abstract class Twig extends ZenView\View
     final protected function onRender($params)
     {
         $params['__TWIG__'] = array(
+            'id' => $this->getId(),
             'title' => $this->getTitle()
         );
         $o_twig = new Twig_Environment(
@@ -66,6 +67,30 @@ abstract class Twig extends ZenView\View
         );
 
         return $o_twig->render(static::TWIG, $params);
+    }
+
+    /**
+     * 获取页面编号。
+     *
+     * @return string
+     */
+    protected function getId()
+    {
+        $s_orig = basename(str_replace('\\', '/', get_class($this)));
+        $s_ret = '';
+        for ($ii = 0, $jj = strlen($s_orig); $ii < $jj; $ii++) {
+            $kk = ord($s_orig[$ii]);
+            if (91 > $kk && 64 < $kk) {
+                if ($ii) {
+                    $s_ret .= '-';
+                }
+                $s_ret .= chr(32 + $kk);
+            } else {
+                $s_ret .= $s_orig[$ii];
+            }
+        }
+
+        return $s_ret;
     }
 
     /**
