@@ -205,6 +205,16 @@ abstract class Dao extends ZenModel\Dao\Dao
                         $a_wterms[] = $s_term . $kk[0] . ' (' . implode(', ', array_fill(0, count($kk[1]), '?')) . ')';
                         array_splice($a_values, count($a_values), 0, $kk[1]);
                         break;
+                    case ZenModel\ISet::OP_BT:
+                        $a_wterms[] = $s_term . ' > ? AND ' . $s_term . ' < ?';
+                        $a_values[] = $kk[1][0];
+                        $a_values[] = $kk[1][1];
+                        break;
+                    case ZenModel\ISet::OP_NB:
+                        $a_wterms[] = '(' . $s_term . ' <= ? OR ' . $s_term . ' >= ?)';
+                        $a_values[] = $kk[1][0];
+                        $a_values[] = $kk[1][1];
+                        break;
                     default:
                         $a_wterms[] = $s_term . $kk[0] . ' ?';
                         $a_values[] = $kk[1];
