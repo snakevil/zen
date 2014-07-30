@@ -53,6 +53,7 @@ final class Json extends ZenView\View
         } else {
             $a_ret = $params;
             $a_ret['error'] = 0;
+            $a_ret['success'] = true;
         }
         $s_ret = json_encode($a_ret);
         if ($s_jsonp) {
