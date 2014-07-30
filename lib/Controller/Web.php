@@ -39,6 +39,7 @@ abstract class Web extends ZenCore\Application\Controller\Controller
     final public function act(ZenCore\Application\IRouterToken $token)
     {
         $this->token = $token;
+        $this->onAct();
         try {
             $o_view = call_user_func(array($this, 'on' . $this->input['server:REQUEST_METHOD']));
         } catch (\Exception $ee) {
@@ -57,6 +58,15 @@ abstract class Web extends ZenCore\Application\Controller\Controller
         }
         $this->onClose();
         $this->output->close();
+    }
+
+    /**
+     * 控制逻辑开始事件。
+     *
+     * @return void
+     */
+    protected function onAct()
+    {
     }
 
     /**
