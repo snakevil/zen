@@ -34,7 +34,7 @@ abstract class Model extends ZenModel\Model
      */
     protected function onSave()
     {
-        if (!$this->__toString()) {
+        if (!$this->__toString() && (string) (int) $this->id == $this->id) {
             $this->id = null;
         }
     }
