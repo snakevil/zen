@@ -87,7 +87,7 @@ abstract class Dao extends ZenModel\Dao\Dao
         $s_sql = 'INSERT `' . static::TABLE . '` SET ' . implode(', ', $a_terms);
         $this->getDs()->prepare($s_sql)->execute($a_values);
 
-        return $this->getDs()->lastInsertId();
+        return $this->getDs()->lastInsertId() ?: $fields['id'];
     }
 
     /**
@@ -109,7 +109,7 @@ abstract class Dao extends ZenModel\Dao\Dao
             throw new ExRecordNotFound(static::TABLE, $id);
         }
 
-        return $this->map($a_ret);
+        return $this->cast($this->map($a_ret));
     }
 
     /**
@@ -289,9 +289,9 @@ abstract class Dao extends ZenModel\Dao\Dao
             $s_sql .= ' LIMIT ' . $offset . ', ' . $limit;
         }
         $o_stmt = $this->getDs()->prepare($s_sql)->execute($a_values);
-        $a_ret = $this->map($o_stmt->fetchAll());
+        $a_ret = $o_stmt->fetchAll();
         $o_stmt->closeCursor();
 
-        return $a_ret;
+        return $this->cast($this->map($a_ret));
     }
 }
