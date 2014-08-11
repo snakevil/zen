@@ -48,7 +48,7 @@ abstract class Web extends ZenCore\Application\Controller\Controller
         if ($o_view instanceof ZenView\IView) {
             $a_options = array();
             if ($o_view instanceof zen\View\Twig) {
-                $a_options['__CACHE__'] = isset($this->config['caching.twig'])
+                $a_options['__CACHE__'] = !$this->inDev() && isset($this->config['caching.twig'])
                     ? $this->config['caching.twig']
                     : false;
             }
