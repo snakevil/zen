@@ -22,7 +22,7 @@
         "zen/model": "To use abstract model.",
         "zen/data-pdo": "To use abstract DAO.",
         "zen/view": "To use abstract views.",
-        "twig/twig": "To use abstract Twig view.",
+        "twig/twig": "To use abstract Twig view."
     },
     "autoload": {
         "psr-4": {
