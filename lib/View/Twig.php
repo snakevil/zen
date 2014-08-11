@@ -45,6 +45,20 @@ abstract class Twig extends ZenView\View
     const TITLE = '';
 
     /**
+     * 页面关键词。
+     *
+     * @var string
+     */
+    const KEYWORDS = '';
+
+    /**
+     * 页面描述。
+     *
+     * @var string
+     */
+    const DESCRIPTION = '';
+
+    /**
      * {@inheritdoc}
      *
      * @internal
@@ -56,7 +70,9 @@ abstract class Twig extends ZenView\View
     {
         $params['__TWIG__'] = array(
             'id' => $this->getId(),
-            'title' => $this->getTitle()
+            'title' => $this->getTitle(),
+            'keywords' => $this->getKeywords(),
+            'description' => $this->getDescription()
         );
         $o_twig = new Twig_Environment(
             new Twig_Loader_Filesystem(static::ROOT),
@@ -101,5 +117,25 @@ abstract class Twig extends ZenView\View
     protected function getTitle()
     {
         return static::TITLE;
+    }
+
+    /**
+     * 获取页面关键词。
+     *
+     * @return string
+     */
+    protected function getKeywords()
+    {
+        return static::KEYWORDS;
+    }
+
+    /**
+     * 获取页面描述。
+     *
+     * @return string
+     */
+    protected function getDescription()
+    {
+        return static::DESCRIPTION;
     }
 }
