@@ -10,6 +10,7 @@
 namespace snakevil\zen\Controller;
 
 use Zen\Core as ZenCore;
+use Zen\Web\Application as ZenWebApp;
 use Zen\View as ZenView;
 
 use snakevil\zen;
@@ -21,7 +22,7 @@ use snakevil\zen;
  * @version 0.1.0
  * @since   0.1.0
  */
-abstract class Web extends ZenCore\Application\Controller\Controller
+abstract class Web extends ZenWebApp\Controller\Controller
 {
     /**
      * 派发令牌实例。

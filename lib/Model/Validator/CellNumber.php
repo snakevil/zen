@@ -35,6 +35,8 @@ class CellNumber extends ZenModel\Validator\Pattern
      *
      * @param  string $value 待验证地值
      * @return bool
+     *
+     * @throws ExIllegalCellNumber 当手机号码不合法时
      */
     public function verify($value)
     {
