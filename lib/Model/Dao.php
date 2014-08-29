@@ -215,6 +215,11 @@ abstract class Dao extends ZenModel\Dao\Dao
                         $a_values[] = $kk[1][0];
                         $a_values[] = $kk[1][1];
                         break;
+                    case ZenModel\ISet::OP_LK:
+                    case ZenModel\ISet::OP_NL:
+                        $a_wterms[] = $s_term . $kk[0] . ' ?';
+                        $a_values[] = str_replace(array('\\*', '*'), array('*', '%'), $kk[1]);
+                        break;
                     default:
                         $a_wterms[] = $s_term . $kk[0] . ' ?';
                         $a_values[] = $kk[1];
