@@ -61,6 +61,9 @@ abstract class Model extends ZenModel\Model
      */
     final protected function castType($property, $type)
     {
+        if (!$this->$property) {
+            return false;
+        }
         if (!$this->$property instanceof $type) {
             if (is_subclass_of($type, 'Zen\Model\IModel')) {
                 $this->$property = $type::load($this->$property);
