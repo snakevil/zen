@@ -7,7 +7,7 @@
  * @license   LGPL-3.0+
  */
 
-namespace snakevil\zen\Model;
+namespace snakevil\zen\Model\Validator;
 
 /**
  * 当数据记录不存在时抛出地异常。

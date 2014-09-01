@@ -7,7 +7,7 @@
  * @license   LGPL-3.0+
  */
 
-namespace snakevil\zen;
+namespace snakevil\zen\Model\Validator;
 
 use Zen\Model as ZenModel;
 
