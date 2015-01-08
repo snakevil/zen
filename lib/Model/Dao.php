@@ -79,12 +79,18 @@ abstract class Dao extends ZenModel\Dao\Dao
      */
     final public function create($fields)
     {
-        $a_terms = $a_values = array();
+        $a_terms = array(
+            array(),
+            array()
+        );
+        $a_values = array();
         foreach ($this->reverseMap($fields) as $ii => $jj) {
-            $a_terms[] = '`' . $ii . '` = :' . $ii;
+            $a_terms[0][] = '`' . $ii . '`';
+            $a_terms[1][] = ':' . $ii;
             $a_values[':' . $ii] = $jj;
         }
-        $s_sql = 'INSERT `' . static::TABLE . '` SET ' . implode(', ', $a_terms);
+        $s_sql = 'INSERT INTO `' . static::TABLE . '` (' . implode(', ', $a_terms[0]) . ') VALUES (' .
+            implode(', ', $a_terms[1]) . ');';
         $this->getDs()->prepare($s_sql)->execute($a_values);
 
         return $this->getDs()->lastInsertId() ?: $fields['id'];
