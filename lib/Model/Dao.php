@@ -93,7 +93,7 @@ abstract class Dao extends ZenModel\Dao\Dao
             implode(', ', $a_terms[1]) . ');';
         $this->getDs()->prepare($s_sql)->execute($a_values);
 
-        return $this->getDs()->lastInsertId() ?: $fields['id'];
+        return isset($fields['id']) ? $fields['id'] : $this->getDs()->lastInsertId();
     }
 
     /**
