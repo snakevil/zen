@@ -40,8 +40,8 @@ abstract class Web extends ZenWebApp\Controller\Controller
     final public function act(ZenCore\Application\IRouterToken $token)
     {
         $this->token = $token;
-        $this->onAct();
         try {
+            $this->onAct();
             $o_view = call_user_func(array($this, 'on' . $this->input['server:REQUEST_METHOD']));
         } catch (\Exception $ee) {
             $o_view = $this->onError($ee);
