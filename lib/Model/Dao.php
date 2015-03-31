@@ -92,8 +92,14 @@ abstract class Dao extends ZenModel\Dao\Dao
         $s_sql = 'INSERT INTO `' . static::TABLE . '` (' . implode(', ', $a_terms[0]) . ') VALUES (' .
             implode(', ', $a_terms[1]) . ');';
         $this->getDs()->prepare($s_sql)->execute($a_values);
+        if (isset($fields['id'])) {
+            return $fields['id'];
+        }
+        $o_stmt = $this->getDs()->prepare('SELECT last_insert_id() AS ida, @last_insert_id AS idb;')->execute();
+        $a_ret = $o_stmt->fetch();
+        $o_stmt->closeCursor();
 
-        return isset($fields['id']) ? $fields['id'] : $this->getDs()->lastInsertId();
+        return $a_ret['ida'] ?: $a_ret['idb'];
     }
 
     /**
