@@ -205,7 +205,7 @@ abstract class Dao extends ZenModel\Dao\Dao
         foreach ($this->reverseMap($conditions) as $ii => $jj) {
             list($s_term, $s_join) = $this->parseTerm($ii);
             if ($s_join) {
-                if ($s_clause) {
+                if ($s_clause && $s_clause != $s_join) {
                     throw new ExTooManyForeignTables(static::TABLE, $conditions);
                 }
                 $s_clause = $s_join;
