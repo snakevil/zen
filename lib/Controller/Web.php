@@ -183,12 +183,18 @@ abstract class Web extends ZenWebApp\Controller\Controller
         if (!$this->inDev() && isset($this->config['caching.solid'])) {
             $p_path = $this->config['caching.solid'] . '/' . $path;
             $p_dir = dirname($p_path);
+            $s_lob = (string) $view;
+            if (!$s_lob) {
+                return true;
+            }
             if (!is_dir($p_dir) && !mkdir($p_dir, 0755, true) || !file_put_contents($p_path, $view)) {
                 throw new ExCachingDenied($path);
             }
             if (null !== $mtime) {
                 touch($p_path, $mtime->getTimestamp());
             }
+
+            return true;
         }
 
         return false;
