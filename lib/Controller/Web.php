@@ -48,6 +48,9 @@ abstract class Web extends ZenWebApp\Controller\Controller
         }
         if ($o_view instanceof ZenView\IView) {
             $a_options = array();
+            if ($this->config['view']) {
+                $a_options['__CONFIG__'] = $this->config['view'];
+            }
             if ($o_view instanceof zen\View\Twig) {
                 $a_options['__CACHE__'] = !$this->inDev() && isset($this->config['caching.twig'])
                     ? $this->config['caching.twig']
