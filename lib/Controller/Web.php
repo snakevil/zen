@@ -25,6 +25,20 @@ use snakevil\zen;
 abstract class Web extends ZenWebApp\Controller\Controller
 {
     /**
+     * 静态页面文件缓存路径。
+     *
+     * @var string
+     */
+    const CACHE_PATH = '';
+
+    /**
+     * 静态页面文件缓存生命周期（单位：秒）。
+     *
+     * @var int
+     */
+    const CACHE_LIFETIME = 0;
+
+    /**
      * 派发令牌实例。
      *
      * @var ZenCore\Application\IRouterToken
@@ -58,6 +72,13 @@ abstract class Web extends ZenWebApp\Controller\Controller
             }
             $this->onRespond($o_view);
             $s_out = $o_view->render($a_options);
+            if ('GET' == $this->input['server:REQUEST_METHOD'] && static::CACHE_PATH) {
+                $this->cache(
+                    $o_view,
+                    static::CACHE_PATH,
+                    new ZenCore\Type\DateTime('+' . static::CACHE_LIFETIME . ' sec')
+                );
+            }
             $this->output->write($s_out);
         }
         $this->onClose();
