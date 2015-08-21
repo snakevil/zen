@@ -72,10 +72,11 @@ abstract class Web extends ZenWebApp\Controller\Controller
             }
             $this->onRespond($o_view);
             $s_out = $o_view->render($a_options);
-            if ('GET' == $this->input['server:REQUEST_METHOD'] && static::CACHE_PATH) {
+            $p_cache = $this->getCachePath();
+            if ('GET' == $this->input['server:REQUEST_METHOD'] && $p_cache) {
                 $this->cache(
                     $o_view,
-                    static::CACHE_PATH,
+                    $p_cache,
                     new ZenCore\Type\DateTime('+' . static::CACHE_LIFETIME . ' sec')
                 );
             }
@@ -232,5 +233,15 @@ abstract class Web extends ZenWebApp\Controller\Controller
     protected function inDev()
     {
         return file_exists('@DEV');
+    }
+
+    /**
+     * 获取静态缓存文件路径。
+     *
+     * @return string
+     */
+    protected function getCachePath()
+    {
+        return static::CACHE_PATH;
     }
 }
