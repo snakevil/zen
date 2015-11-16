@@ -3,7 +3,7 @@
  * 定义数据格式为 JSON 的视图组件。
  *
  * @author    Snakevil Zen <zsnakevil@gmail.com>
- * @copyright © 2014 SZen.in
+ * @copyright © 2015 SZen.in
  * @license   LGPL-3.0+
  */
 
@@ -19,7 +19,7 @@ use Zen\View as ZenView;
  * @version 0.1.0
  * @since   0.1.0
  */
-final class Json extends ZenView\View
+final class Json extends ZenView\View implements IJson
 {
     /**
      * {@inheritdoc}
@@ -34,7 +34,7 @@ final class Json extends ZenView\View
         $s_jsonp = '';
         if (isset($params['jsonp'])) {
             $s_jsonp = $params['jsonp'];
-            unset($s_jsonp);
+            unset($params['jsonp']);
         }
         if (isset($params['error']) && $params['error'] instanceof \Exception) {
             $a_ret = array(

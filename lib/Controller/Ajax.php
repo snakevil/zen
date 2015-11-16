@@ -3,7 +3,7 @@
  * 定义抽象 Ajax 接口控制器组件。
  *
  * @author    Snakevil Zen <zsnakevil@gmail.com>
- * @copyright © 2014 SZen.in
+ * @copyright © 2015 SZen.in
  * @license   LGPL-3.0+
  */
 
@@ -65,7 +65,7 @@ abstract class Ajax extends Web
      */
     protected function onRespond(ZenView\IView $view)
     {
-        if ($view instanceof zen\View\Json) {
+        if ($view instanceof zen\View\IJson) {
             $s_callback = $this->input->expect('post:callback', $this->input->expect('get:callback', ''));
             if ('' != $s_callback) {
                 $view['jsonp'] = $s_callback;

@@ -3,7 +3,7 @@
  * 定义抽象控制器组件。
  *
  * @author    Snakevil Zen <zsnakevil@gmail.com>
- * @copyright © 2014 SZen.in
+ * @copyright © 2015 SZen.in
  * @license   LGPL-3.0+
  */
 
@@ -59,6 +59,9 @@ abstract class Web extends ZenWebApp\Controller\Controller
             $o_view = call_user_func(array($this, 'on' . $this->input['server:REQUEST_METHOD']));
         } catch (\Exception $ee) {
             $o_view = $this->onError($ee);
+        }
+        if ($o_view instanceof zen\View\IJson) {
+            $this->output->header('Content-Type', 'application/json');
         }
         if ($o_view instanceof ZenView\IView) {
             $a_options = array();
