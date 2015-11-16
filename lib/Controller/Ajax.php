@@ -52,7 +52,7 @@ abstract class Ajax extends Web
      * @param  \Exception    $error 捕获地错误
      * @return zen\View\Json
      */
-    final protected function onError(\Exception $error)
+    protected function onError(\Exception $error)
     {
         return new zen\View\Json(array('error' => $error));
     }
