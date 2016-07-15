@@ -3,7 +3,7 @@
  * 定义抽象模型组件。
  *
  * @author    Snakevil Zen <zsnakevil@gmail.com>
- * @copyright © 2014 SZen.in
+ * @copyright © 2016 SZen.in
  * @license   LGPL-3.0+
  */
 
@@ -14,8 +14,8 @@ use Zen\Model as ZenModel;
 /**
  * 抽象模型组件。
  *
- * @package snakevil\zen
  * @version 0.1.0
+ *
  * @since   0.1.0
  */
 abstract class Model extends ZenModel\Model
@@ -28,9 +28,23 @@ abstract class Model extends ZenModel\Model
     protected $pools;
 
     /**
-     * {@inheritdoc}
+     * 获取唯一标识信息。
      *
-     * @return void
+     * @return int|string
+     *
+     * @throws ExEntityInDraft
+     */
+    public function getId()
+    {
+        if (!$this->__toString()) {
+            throw new ExEntityInDraft();
+        }
+
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function onSave()
     {
@@ -55,9 +69,8 @@ abstract class Model extends ZenModel\Model
     /**
      * 转换属性值类型。
      *
-     * @param  string $property 属性名
-     * @param  string $type     目标类名
-     * @return void
+     * @param string $property 属性名
+     * @param string $type     目标类名
      */
     final protected function castType($property, $type)
     {
@@ -78,9 +91,10 @@ abstract class Model extends ZenModel\Model
      *
      * 当该集合不存在或强制更新时，则使用备选集合。
      *
-     * @param  scalar       $key    键名
-     * @param  ZenModel\Set $alter  备选集合
-     * @param  bool         $update 可选。是否更新指定集合
+     * @param scalar       $key    键名
+     * @param ZenModel\Set $alter  备选集合
+     * @param bool         $update 可选。是否更新指定集合
+     *
      * @return ZenModel\Set
      */
     protected function fetchSet($key, ZenModel\Set $alter, $update = false)
