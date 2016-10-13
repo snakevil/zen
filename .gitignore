@@ -1,7 +1,8 @@
-/*
-
+*
 !.gitignore
-!composer.json
 
+!composer.json
 !lib/
 !share/
+!include/
+!phpunit.xml
