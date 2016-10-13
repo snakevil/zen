@@ -3,25 +3,21 @@
  * 定义基于 Twig 的抽象视图组件。
  *
  * @author    Snakevil Zen <zsnakevil@gmail.com>
- * @copyright © 2014 SZen.in
+ * @copyright © 2016 SZen.in
  * @license   LGPL-3.0+
  */
 
 namespace snakevil\zen\View;
 
 use Zen\View as ZenView;
-
+use Twig_ExtensionInterface;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 
 /**
  * 基于 Twig 的抽象视图组件。
- *
- * @package snakevil\zen
- * @version 0.1.0
- * @since   0.1.0
  */
-abstract class Twig extends ZenView\View
+abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
 {
     /**
      * 模板文件根目录路径。
@@ -63,7 +59,8 @@ abstract class Twig extends ZenView\View
      *
      * @internal
      *
-     * @param  mixed[] $params
+     * @param mixed[] $params
+     *
      * @return string
      */
     final protected function onRender($params)
@@ -72,15 +69,16 @@ abstract class Twig extends ZenView\View
             'id' => $this->getId(),
             'title' => $this->getTitle(),
             'keywords' => $this->getKeywords(),
-            'description' => $this->getDescription()
+            'description' => $this->getDescription(),
         );
         $o_twig = new Twig_Environment(
             new Twig_Loader_Filesystem(static::ROOT),
             array(
                 'strict_variables' => true,
-                'cache' => isset($params['__CACHE__']) ? $params['__CACHE__'] : false
+                'cache' => isset($params['__CACHE__']) ? $params['__CACHE__'] : false,
             )
         );
+        $o_twig->addExtension($this);
 
         return $o_twig->render(static::TWIG, $params);
     }
@@ -94,7 +92,7 @@ abstract class Twig extends ZenView\View
     {
         $s_orig = basename(str_replace('\\', '/', get_class($this)));
         $s_ret = '';
-        for ($ii = 0, $jj = strlen($s_orig); $ii < $jj; $ii++) {
+        for ($ii = 0, $jj = strlen($s_orig); $ii < $jj; ++$ii) {
             $kk = ord($s_orig[$ii]);
             if (91 > $kk && 64 < $kk) {
                 if ($ii) {
@@ -137,5 +135,54 @@ abstract class Twig extends ZenView\View
     protected function getDescription()
     {
         return static::DESCRIPTION;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    final public function initRuntime(Twig_Environment $environment)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTokenParsers()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNodeVisitors()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTests()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOperators()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGlobals()
+    {
     }
 }
