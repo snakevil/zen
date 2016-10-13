@@ -1,6 +1,7 @@
 <phpunit>
   <testsuites>
     <testsuite name="Caching">
+      <file>share/test/Utility/CacheTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
