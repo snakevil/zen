@@ -6,3 +6,4 @@
 !share/
 !include/
 !phpunit.xml
+!bin/

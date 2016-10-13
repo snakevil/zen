@@ -1,0 +1,41 @@
+#!/usr/bin/env php
+<?php
+/**
+ * 删除静态缓存文件。
+ *
+ * 等效于 `snakevil\zen\Utility\Cache::purge()` 。
+ *
+ * @author Snakevil Zen <zsnakevil@gmail.com>
+ * @copyright © 2016 SZen.in
+ * @license LGPL-3.0+
+ */
+
+namespace snakevil\zen;
+
+ob_end_clean();
+
+if (3 > $_SERVER['argc']) {
+    echo <<<'HELP'
+Purges some cache files and empty directories in its hierarchy.
+
+Usage:
+  cache-purge <root> <path>
+
+HELP;
+    exit();
+}
+
+foreach (array(
+        __DIR__ . '/../../../autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
+        __DIR__ . '/../include/autoload.php'
+    ) as $p_autoload) {
+    if (file_exists($p_autoload)) {
+        require $p_autoload;
+        break;
+    }
+}
+
+Utility\Cache::root($_SERVER['argv'][1]);
+$o_cache = new Utility\Cache($_SERVER['argv'][2]);
+$o_cache->purge();

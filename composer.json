@@ -48,6 +48,9 @@
             "phpunit --testdox"
         ]
     },
+    "bin": [
+        "bin/cache-purge"
+    ],
     "archive": {
         "exclude": [
             "/share",
