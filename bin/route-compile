@@ -1,0 +1,77 @@
+#!/usr/bin/env php
+<?php
+/**
+ * 路由表编译工具。
+ *
+ * @author Snakevil Zen <zsnakevil@gmail.com>
+ * @copyright © 2016 SZen.in
+ * @license LGPL-3.0+
+ */
+
+use Exception as E;
+
+try {
+    if (!function_exists('json_decode')) {
+        throw new E("extension 'json' required");
+    }
+    if (!file_exists('composer.json')) {
+        throw new E("'composer.json' not found in CWD", 2);
+    }
+    if (!is_writable('etc')) {
+        throw new E("'etc' folder write denied", 3);
+    }
+    $a_routes = array();
+    foreach (_sequence('.') as $s_dep) {
+        $p_route = 'include/'.$s_dep.'/etc/route.php';
+        if (!file_exists($p_route)) {
+            throw new E("'etc/route.php' not found in package '$s_dep'", 4);
+        }
+        $a_routes[] = $p_route;
+    }
+    if (file_exists('etc/route.php')) {
+        $a_routes[] = 'etc/route.php';
+    }
+    $a_rules = array();
+    foreach ($a_routes as $p_route) {
+        $a_rules = _parse(require $p_route, $a_rules);
+    }
+    if (array_key_exists('.*', $a_rules)) {
+        $s_rule = $a_rules['.*'];
+        unset($a_rules['.*']);
+        $a_rules['.*'] = $s_rule;
+    }
+    file_put_contents('etc/route.bundle.php', '<?php return '.var_export($a_rules, true).';');
+} catch (E $ee) {
+    fwrite(STDERR, 'route-compile: '.trim($ee->getMessage()).'.'.PHP_EOL);
+    exit(1 | $ee->getCode());
+}
+
+function _sequence($dir) {
+    $a_deps = array();
+    $a_json = json_decode(file_get_contents($dir.'/composer.json'), true);
+    if (!isset($a_json['extra']['route-compile'])) {
+        return $a_deps;
+    }
+    $a_deps = $a_json['extra']['route-compile'];
+    unset($a_json);
+    if (!empty($a_deps)) {
+        $a_deep = array();
+        foreach ($a_deps as $s_dep) {
+            $a_deep[] = _sequence('include/'.$s_dep);
+        }
+        $a_deep[] = $a_deps;
+        $a_deps = array_unique(call_user_func_array('array_merge', $a_deep));
+    }
+    return $a_deps;
+}
+
+function _parse($tree, $rules, $prefix = '') {
+    while (list($s_prefix, $m_rules) = each($tree)) {
+        if (is_array($m_rules)) {
+            $rules = _parse($m_rules, $rules, $prefix.$s_prefix);
+        } else {
+            $rules[$prefix.$s_prefix] = $m_rules;
+        }
+    }
+    return $rules;
+}

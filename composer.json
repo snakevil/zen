@@ -50,7 +50,8 @@
         ]
     },
     "bin": [
-        "bin/cache-purge"
+        "bin/cache-purge",
+        "bin/route-compile"
     ],
     "archive": {
         "exclude": [
