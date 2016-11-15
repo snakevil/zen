@@ -66,10 +66,10 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
     final protected function onRender($params)
     {
         $params['__TWIG__'] = array(
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'keywords' => $this->getKeywords(),
-            'description' => $this->getDescription(),
+            'id' => $this->getId($params),
+            'title' => $this->getTitle($params),
+            'keywords' => $this->getKeywords($params),
+            'description' => $this->getDescription($params),
         );
         $o_twig = new Twig_Environment(
             new Twig_Loader_Filesystem(static::ROOT),
@@ -86,9 +86,11 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
     /**
      * 获取页面编号。
      *
+     * @param array $params
+     *
      * @return string
      */
-    protected function getId()
+    protected function getId($params)
     {
         $s_orig = basename(str_replace('\\', '/', get_class($this)));
         $s_ret = '';
@@ -110,9 +112,11 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
     /**
      * 获取页面标题。
      *
+     * @param array $params
+     *
      * @return string
      */
-    protected function getTitle()
+    protected function getTitle($params)
     {
         return static::TITLE;
     }
@@ -120,9 +124,11 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
     /**
      * 获取页面关键词。
      *
+     * @param array $params
+     *
      * @return string
      */
-    protected function getKeywords()
+    protected function getKeywords($params)
     {
         return static::KEYWORDS;
     }
@@ -130,9 +136,11 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
     /**
      * 获取页面描述。
      *
+     * @param array $params
+     *
      * @return string
      */
-    protected function getDescription()
+    protected function getDescription($params)
     {
         return static::DESCRIPTION;
     }
