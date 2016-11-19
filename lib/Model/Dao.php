@@ -329,4 +329,46 @@ abstract class Dao extends ZenModel\Dao\Dao
 
         return $this->cast($this->map($a_ret));
     }
+
+    /**
+     * 根据条件更新多条实体。
+     *
+     * @param array[] $conditions
+     * @param mixed[] $fields
+     *
+     * @return bool
+     */
+    public function updateFor($conditions, $fields)
+    {
+        $a_clause = $this->parseConditions($conditions);
+        $s_clause = array_shift($a_clause);
+        if (' LEFT JOIN ' == substr($s_clause, 0, 11)) {
+            $o_stmt = $this->exec('SELECT m.`'.static::PK.'` AS id FROM `'.static::TABLE.'`'.$s_clause, $a_clause);
+            $a_ids = array();
+            foreach ($o_stmt->fetchAll() as $a_row) {
+                $a_ids[] = $a_row['id'];
+            }
+            $o_stmt->closeCursor();
+            $a_clause = $this->parseConditions(
+                array(
+                    'id' => array(
+                        array(
+                            'IN',
+                            $a_ids,
+                        ),
+                    ),
+                )
+            );
+            $s_clause = array_shift($a_clause);
+        }
+        $a_terms = $a_values = array();
+        foreach ($this->reverseMap($fields) as $ii => $jj) {
+            $a_terms[] = '`'.$ii.'` = ?';
+            $a_values[] = $jj;
+        }
+        $s_sql = 'UPDATE `'.static::TABLE.'` SET '.implode(', ', $a_terms).$s_clause;
+        $this->exec($s_sql, array_merge($a_values, $a_clause));
+
+        return true;
+    }
 }
