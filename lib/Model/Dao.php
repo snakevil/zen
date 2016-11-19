@@ -71,6 +71,19 @@ abstract class Dao extends ZenModel\Dao\Dao
     }
 
     /**
+     * 快速执行 SQL。
+     *
+     * @param string $sql
+     * @param array  $params
+     *
+     * @return ZenPdo\IStatement
+     */
+    final protected function exec($sql, $params = array())
+    {
+        return $this->getDs()->prepare($sql)->execute($params);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @param mixed[] $fields 实体属性值集合
@@ -91,11 +104,11 @@ abstract class Dao extends ZenModel\Dao\Dao
         }
         $s_sql = 'INSERT INTO `'.static::TABLE.'` ('.implode(', ', $a_terms[0]).') VALUES ('.
             implode(', ', $a_terms[1]).');';
-        $this->getDs()->prepare($s_sql)->execute($a_values);
+        $this->exec($s_sql, $a_values);
         if (isset($fields['id'])) {
             return $fields['id'];
         }
-        $o_stmt = $this->getDs()->prepare('SELECT last_insert_id() AS ida, @last_insert_id AS idb;')->execute();
+        $o_stmt = $this->exec('SELECT last_insert_id() AS ida, @last_insert_id AS idb;');
         $a_ret = $o_stmt->fetch();
         $o_stmt->closeCursor();
 
@@ -113,8 +126,7 @@ abstract class Dao extends ZenModel\Dao\Dao
      */
     final public function read($id)
     {
-        $s_sql = 'SELECT * FROM `'.static::TABLE.'` WHERE `'.static::PK.'` = ?';
-        $o_stmt = $this->getDs()->prepare($s_sql)->execute(array($id));
+        $o_stmt = $this->exec('SELECT * FROM `'.static::TABLE.'` WHERE `'.static::PK.'` = ?', array($id));
         $a_ret = $o_stmt->fetch();
         $o_stmt->closeCursor();
 
@@ -143,7 +155,7 @@ abstract class Dao extends ZenModel\Dao\Dao
         $s_sql = 'UPDATE `'.static::TABLE.'` SET '.implode(', ', $a_terms)
             .' WHERE `'.static::PK.'` = :old_id';
         $a_values[':old_id'] = $id;
-        $this->getDs()->prepare($s_sql)->execute($a_values);
+        $this->exec($s_sql, $a_values);
 
         return true;
     }
@@ -157,8 +169,7 @@ abstract class Dao extends ZenModel\Dao\Dao
      */
     public function delete($id)
     {
-        $s_sql = 'DELETE FROM `'.static::TABLE.'` WHERE `'.static::PK.'` = ?';
-        $this->getDs()->prepare($s_sql)->execute(array($id));
+        $this->exec('DELETE FROM `'.static::TABLE.'` WHERE `'.static::PK.'` = ?', array($id));
 
         return true;
     }
@@ -177,7 +188,7 @@ abstract class Dao extends ZenModel\Dao\Dao
         $a_values = $this->parseConditions($conditions);
         $s_sql = 'SELECT COUNT(m.`'.static::PK.'`) quantity FROM `'.static::TABLE.'` m'
             .array_shift($a_values);
-        $o_stmt = $this->getDs()->prepare($s_sql)->execute($a_values);
+        $o_stmt = $this->exec($s_sql, $a_values);
         $i_quantity = $o_stmt->fetchColumn();
         $o_stmt->closeCursor();
         if (0 < $offset) {
@@ -312,7 +323,7 @@ abstract class Dao extends ZenModel\Dao\Dao
         if (0 < $offset || 0 < $limit) {
             $s_sql .= ' LIMIT '.$offset.', '.$limit;
         }
-        $o_stmt = $this->getDs()->prepare($s_sql)->execute($a_values);
+        $o_stmt = $this->exec($s_sql, $a_values);
         $a_ret = $o_stmt->fetchAll();
         $o_stmt->closeCursor();
 
