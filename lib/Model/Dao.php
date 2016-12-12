@@ -360,6 +360,8 @@ abstract class Dao extends ZenModel\Dao\Dao
                 )
             );
             $s_clause = array_shift($a_clause);
+        } else {
+            $s_clause = str_replace('m.', '', $s_clause);
         }
         $a_terms = $a_values = array();
         foreach ($this->reverseMap($fields) as $ii => $jj) {
