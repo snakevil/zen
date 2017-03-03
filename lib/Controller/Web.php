@@ -48,10 +48,12 @@ abstract class Web extends ZenWebApp\Controller\Controller
     final public function act(ZenCore\Application\IRouterToken $token)
     {
         $this->token = $token;
+        $b_error = false;
         try {
             $this->onAct();
             $o_view = call_user_func(array($this, 'on'.$this->input['server:REQUEST_METHOD']));
         } catch (\Exception $ee) {
+            $b_error = true;
             $o_view = $this->onError($ee);
         }
         if ($o_view instanceof zen\View\IJson) {
@@ -70,7 +72,7 @@ abstract class Web extends ZenWebApp\Controller\Controller
             $this->onRespond($o_view);
             $s_out = $o_view->render($a_options);
             $p_cache = $this->getCachePath();
-            if ('GET' == $this->input['server:REQUEST_METHOD'] && $p_cache) {
+            if (!$b_error && 'GET' == $this->input['server:REQUEST_METHOD'] && $p_cache && 0 < static::CACHE_LIFETIME) {
                 $this->cache(
                     $o_view,
                     $p_cache,
