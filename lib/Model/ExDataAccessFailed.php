@@ -14,7 +14,7 @@ namespace snakevil\zen\Model;
  *
  * @method void __construct(\Exception $prev = null) 构造函数
  */
-final class ExDataSourceMissing extends Exception
+final class ExDataAccessFailed extends Exception
 {
     /**#@+
      * @ignore
