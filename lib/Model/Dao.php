@@ -80,7 +80,11 @@ abstract class Dao extends ZenModel\Dao\Dao
      */
     final protected function exec($sql, $params = array())
     {
-        return $this->getDs()->prepare($sql)->execute($params);
+        try {
+            return $this->getDs()->prepare($sql)->execute($params);
+        } catch (\Exception $ee) {
+            throw new ExDataAccessFailed($sql, $params, $ee->getMessage(), $ee);
+        }
     }
 
     /**
