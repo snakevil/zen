@@ -3,7 +3,7 @@
  * 定义抽象控制器组件。
  *
  * @author    Snakevil Zen <zsnakevil@gmail.com>
- * @copyright © 2016 SZen.in
+ * @copyright © 2017 SZen.in
  * @license   LGPL-3.0+
  */
 
@@ -14,9 +14,6 @@ use Zen\Web\Application as ZenWebApp;
 use Zen\View as ZenView;
 use snakevil\zen;
 
-/**
- * 抽象控制器组件。
- */
 abstract class Web extends ZenWebApp\Controller\Controller
 {
     /**
@@ -60,12 +57,13 @@ abstract class Web extends ZenWebApp\Controller\Controller
             $this->output->header('Content-Type', 'application/json');
         }
         if ($o_view instanceof ZenView\IView) {
-            $a_options = array();
-            if ($this->config['view']) {
-                $a_options['__CONFIG__'] = $this->config['view'];
-            }
-            if ($o_view instanceof zen\View\Twig) {
-                $a_options['__CACHE__'] = !$this->inDev() && isset($this->config['caching.twig'])
+            $a_options = array(
+                '$config' => $this->config['view']
+                    ? $this->config['view']
+                    : array(),
+            );
+            if ($o_view instanceof zen\View\Twig || $o_view instanceof zen\View\Twig2) {
+                $a_options['$config']['cache'] = !$this->inDev() && isset($this->config['caching.twig'])
                     ? $this->config['caching.twig']
                     : false;
             }

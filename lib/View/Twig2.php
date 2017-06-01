@@ -1,9 +1,9 @@
 <?php
 /**
- * 定义基于 Twig 的抽象视图组件。
+ * 定义基于 Twig2 的抽象视图组件。
  *
  * @author    Snakevil Zen <zsnakevil@gmail.com>
- * @copyright © 2016 SZen.in
+ * @copyright © 2017 SZen.in
  * @license   LGPL-3.0+
  */
 
@@ -14,10 +14,7 @@ use Twig_ExtensionInterface;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 
-/**
- * 基于 Twig 的抽象视图组件。
- */
-abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
+abstract class Twig2 extends ZenView\View implements Twig_ExtensionInterface
 {
     /**
      * 模板文件根目录路径。
@@ -65,7 +62,7 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
      */
     final protected function onRender($params)
     {
-        $params['__TWIG__'] = array(
+        $params['$page'] = array(
             'id' => $this->getId($params),
             'title' => $this->getTitle($params),
             'keywords' => $this->getKeywords($params),
@@ -148,13 +145,6 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
     /**
      * {@inheritdoc}
      */
-    final public function initRuntime(Twig_Environment $environment)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getTokenParsers()
     {
         return array();
@@ -196,14 +186,6 @@ abstract class Twig extends ZenView\View implements Twig_ExtensionInterface
      * {@inheritdoc}
      */
     public function getOperators()
-    {
-        return array();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGlobals()
     {
         return array();
     }
